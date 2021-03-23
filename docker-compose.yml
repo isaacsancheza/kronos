@@ -1,0 +1,44 @@
+version: "3.1"
+
+services: 
+  app:
+    image: kronos
+    env_file:
+      - .env
+    command: bash start.bash
+    ports:
+      - "8000:8000"
+    depends_on: 
+      - db
+      - broker
+  db:
+    env_file: 
+      - .env
+    image: postgres:13
+    volumes:
+      - db:/var/lib/postgresql/data
+  broker:
+    env_file: 
+      - .env
+    image: rabbitmq
+  worker:
+    image: kronos
+    env_file:
+      - .env
+    command: bash -c "
+      for i in {1..120}; do echo waiting for app to be ready ${i}; done
+      && echo done
+      && celery -A kronos worker -l INFO"
+  beat:
+    image: kronos
+    env_file:
+      - .env
+    command: bash -c "
+      for i in {1..120}; do echo waiting for app to be ready${i}; done
+      && echo done
+      && celery -A kronos beat -l INFO"
+    depends_on: 
+      - app
+
+volumes:
+  db:

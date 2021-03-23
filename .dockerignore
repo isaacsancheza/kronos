@@ -1,0 +1,10 @@
+get_group_id.py
+.env
+.venv
+build.bash
+Pipfile
+Pipfile.lock
+docker-compose.yml
+.git
+Dockerfile
+.dockerignore
