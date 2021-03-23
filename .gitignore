@@ -3,3 +3,4 @@
 .venv
 get_group_id.py
 twitter.py
+__pycache__
